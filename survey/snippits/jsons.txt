@@ -1,0 +1,252 @@
+{
+  "session_id": "asd",
+  "requests": [
+    {
+      "type": "add",
+      "form_type": "Form1",
+      "data": {
+        "text1": "oneee",
+        "int1": 65
+      }
+    },
+    {
+      "type": "add",
+      "form_type": "Form1",
+      "data": {
+        "text1": "twooo",
+        "int1": 65
+      }
+    },
+    {
+      "type": "add",
+      "form_type": "Form1",
+      "data": {
+        "text1": "threee",
+        "int1": 65
+      }
+    }
+  ]
+}
+
+
+
+=======================
+
+{
+  "session_id": "asd",
+  "requests": [
+    {
+      "type": "add",
+      "form_type": "DH_antenantals",
+      "data": {
+        "hemoglobintest": false,
+        "bloodpressure": false,
+        "urinetest": false,
+        "pregnancyfood": false,
+        "pregnancydanger": false,
+        "fourparts": false,
+        "delivery": false,
+        "feedbaby": false,
+        "sixmonths": false,
+        "familyplanning": false,
+        "folictablet": false,
+        "folictabletimportance": false
+      },
+      "meta" : {
+        "comments" : "this is a comment",
+        "fields" : "5,6,5",
+        "anything else" : "as if its a document type"
+      }
+    }
+  ]
+}
+
+
+/*update*/
+{
+  "session_id": "asd",
+  "requests": [
+    {
+      "type": "update",
+      "form_id": 54,
+      "data": {
+        "text1": "Test Updated",
+        "int1": 999,
+        "bool1": true
+      }
+    },
+    {
+      "type": "update",
+      "form_id": 55,
+      "data": {
+        "text1": "Test Updated",
+        "int1": 999,
+        "cat1": "label2"
+      }
+    },
+    {
+      "type": "update",
+      "form_id": 56,
+      "data": {
+        "text1": "Test Updated",
+        "int1": 999,
+        "cat1": "label1"
+      }
+    }
+  ]
+}
+}
+
+
+
+
+===================================
+{
+  "session_id": "asd",
+  "requests": [
+    {
+      "type": "update",
+      "form_id": 69,
+      "data": {
+        "hemoglobintest": true,
+        "bloodpressure": true,
+        "urinetest": true,
+        "pregnancyfood": true,
+        "pregnancydanger": true,
+        "fourparts": true,
+        "delivery": true,
+        "feedbaby": true,
+        "sixmonths": true,
+        "familyplanning": true,
+        "folictablet": true,
+        "folictabletimportance": true
+      }
+    }
+  ]
+}
+
+
+/*Delete*/
+{
+  "session_id": "asd",
+  "requests": [
+    {
+      "type": "delete",
+      "form_type": "Form1",
+      "form_id": 68
+    }
+  ]
+}
+
+/*
+Status with respect to form:
+1-> Accepted
+2-> Reverted
+3-> Pending
+
+Status with respect to the request (if the request is successful or not)
+0-> Error
+1-> There may be an error in one of the requests you have sent
+2-> Sucess
+
+
+
+
+*/
+
+
+kolorob.net/mamoni/survey/api/form
+============================================================adding --- form
+==================collector
+{
+  "username": "taw_khan@yahoo.com",
+  "password": "taw1994",
+  "requests": [
+    {
+      "type": "add",
+      "form_type": "dh_antenantals",
+      "data": {
+        "hemoglobintest": false,
+        "bloodpressure": false,
+        "urinetest": false,
+        "pregnancyfood": false,
+        "pregnancydanger": false,
+        "fourparts": false,
+        "delivery": false,
+        "feedbaby": false,
+        "sixmonths": false,
+        "familyplanning": false,
+        "folictablet": false,
+        "folictabletimportance": false
+      }
+    }
+  ]
+}
+
+=======================================================Updating
+========================collector
+{
+  "username": "taw_khan@yahoo.com",
+  "password": "taw1994",
+  "requests": [
+    {
+      "type": "update",
+      "form_id": 95,
+      "data": {
+        "hemoglobintest": true,
+        "bloodpressure": false,
+        "urinetest": false,
+        "pregnancyfood": false,
+        "pregnancydanger": false,
+        "fourparts": false,
+        "delivery": false,
+        "feedbaby": false,
+        "sixmonths": false,
+        "familyplanning": false,
+        "folictablet": false,
+        "folictabletimportance": false
+      }      
+    }
+  ]
+}
+
+========================supervisor
+{
+  "username": "taw_khan@yahoo.com",
+  "password": "taw1994",
+  "requests": [
+    {
+      "type": "update",
+      "form_id": 95,
+      "status" : 1,
+      "meta" : {
+        "comments" : "this is a comment",
+        "fields" : "5,6,5",
+        "anything else" : "qwertyuioplkjgfds"
+      }
+    
+    }
+  ]
+}
+kolorob.net/mamoni/survey/api/sync
+=======================================================Syncing
+{
+"username" : "taw_khan1@yahoo.com",
+"password" : "taw1994",
+"timestamp" : "2016-03-24 11:20:29"
+}
+=========to get all
+{
+"username" : "taw_khan1@yahoo.com",
+"password" : "taw1994",
+"timestamp" : "2016-03-24 11:20:29",
+"get_all" : true
+}
+
+
+kolorob.net/mamoni/survey/api/login
+=======================================================login check
+{
+"username" : "taw_khan@yahoo.com",
+"password" : "taw1994"
+}

@@ -1,0 +1,60 @@
+/*FormRepository::add("Form5", array(
+    "bool" => false,
+    "cat" => "label1",
+    "text" => "aiaiaiaaiaiaai",
+    "date" => date('Y-m-d G:i:s'),
+    "num" => 666 
+));*/
+
+//var_dump(FormRepository::get(101));
+/*Form::updateForm(102,array(
+    "bool" => false,
+    "text" => "waghahah",
+    "date" => date('Y-m-d G:i:s'),
+    "num" => 17 
+));*/
+
+/*
+$data = array(
+    "name" => "Form5",
+    "fields" =>array(
+        "bool" => array(
+            "name" => "bool",
+            "meta" => array(
+                "category" => "section2"
+            )
+        ),
+        "category" => array(
+            "name" => "cat",
+            "options" => array(
+                array("label" => "label1", "value"=> "opt1"),
+                array("label" => "label2", "value"=> "opt2"),
+                array("label" => "label3", "value"=> "opt3")
+            ),
+            "meta" => array(
+                "category" => "section1"
+            )
+        ),
+        "text" => array(
+            "name" => "text",
+            "meta" => array(
+                "category" => "client"
+            )
+        ),
+        "date" => array(
+            "name" => "date",
+            "meta" => array(
+                "category" => "client"
+            )
+        ),
+        "number" => array(
+            "name" => "num",
+            "meta" => array(
+                "category" => "client"
+            )
+        )
+    ),
+    "meta"=>array()
+);
+
+SchemaDefine::create($data);*/

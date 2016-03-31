@@ -1,0 +1,10 @@
+<?php
+
+class  SchemaDefine extends Defination {
+    
+    public function __construct() {
+        parent::__construct();
+    }
+
+    
+}

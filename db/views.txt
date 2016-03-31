@@ -1,0 +1,13 @@
+Create or Replace view _form_details as
+select f.id form_id, ft.id form_type_id, ft.name form_type_name from forms f, form_type ft where f._form_type_id= ft.id;
+
+
+
+Create or replace View _field_details as
+select f.id field_id, f.name field_name, f.type field_type, f.category field_category, ft.id form_type_id, ft.name form_type_name from field f, form_type ft where f._form_type_id = ft.id
+
+create or replace view _repo as
+select * from forms_data fod, _field_details fid where fod._field_id=fid.field_id;
+
+create or replace view _sync_user as
+select s.*, u._district_id from sync s, users u where s._user_id= u.id;

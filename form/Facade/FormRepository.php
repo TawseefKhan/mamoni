@@ -1,0 +1,73 @@
+<?php
+
+class FormRepository {
+
+    /**
+     * this function will add the data of a form
+     * @param string $formType the form type
+     * @param array $data name_of_field => data
+     */
+    static function add($formType, $data, $meta=false){
+        //add / get the form id
+        return Form::addForm($formType, $data, $meta);
+    }
+    
+    
+    /**
+     * this function will update the data of a form
+     * @param string $formType the form type
+     * @param array $data name_of_field => data
+     */
+    static function update($form_id, $data, $meta){
+        //add / get the form
+        $formId = Form::updateform($form_id, $data, $meta);
+        return true;
+    }
+    
+    /**
+     * this function will delete the data of a form
+     * @param string $form_id the form type
+     */
+    static function delete($form_id){
+        //add / get the form
+        $formId = Form::deleteForm($form_id);
+        return true;
+    }
+    
+    
+    /**
+     * this function will get the data of a form
+     * @param integer $formId
+     * @return array
+     */
+    static function getFormFields($formId){
+        //get all the fields of the form
+        $fields = Form::getFields($formId);
+        $main_fields = array();
+        
+        
+        //loop through the fireds and populate the values
+        for($i=0; $i<count($fields); $i++){
+           //get the type of field class
+            $cls = FHelpers::getFieldType($fields[$i]["field_type"], $fields[$i]["field_category"]);
+            $fields[$i]["data"] = $cls->getValue($fields[$i]["_field_value_id"]);
+            $main_fields[$fields[$i]["field_name"]] = $cls->getValue($fields[$i]["_field_value_id"]);
+        }
+        
+        //return master array
+         return $main_fields;
+    }
+    
+    /**
+     * this function will get the Meta of a form
+     * @param integer $formId
+     * @return array
+     */
+    static function getFormMeta($formId, $arr){
+        
+        //load the meta for the form
+        $meta = Meta::getFormMeta($formId, $arr);
+         return $meta;
+         
+    }
+}

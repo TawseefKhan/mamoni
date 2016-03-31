@@ -1,0 +1,77 @@
+
+$fieldInt = new FieldIntDefine();
+$fieldInt->create("fieldInt2",10);
+
+
+$fieldText = new FieldTextDefine();
+$fieldText->create("fieldText",10);
+
+$fieldDate = new FieldDateDefine();
+$fieldDate->create("fieldDate",10);
+
+$fieldBool = new FieldBoolDefine();
+$fieldBool->create("fieldBool",10);
+
+$fieldCat = new FieldCategoryDefine();
+$fieldCat->create("fieldCategory2", 10, array(
+    array("value" => "one"),
+    array("value" => "two"),
+    array("value" => "three"),
+    array("value" => "four")
+));
+
+$fieldInt = new FieldIntDefine();
+$fieldInt->delete("fieldInt2");
+
+$fieldText = new FieldTextDefine();
+$fieldText->delete("fieldText");
+
+$fieldDate = new FieldDateDefine();
+$fieldDate->delete("fieldDate");
+
+$fieldBool = new FieldBoolDefine();
+$fieldBool->delete("fieldBool");
+
+$fieldCat = new FieldCategoryDefine();
+$fieldCat->delete("fieldCategory2");
+
+/*new form data*/
+$data = array(
+    "name" => "Form2".  uniqid(),
+    "fields" =>array(
+        "bool" => array(
+            "name" => "bool1",
+            "meta" => array(
+                "category" => "section2"
+            )
+        ),
+        "category" => array(
+            "name" => "cat1",
+            "options" => array(
+                array("label" => "label1", "value"=> "opt1"),
+                array("label" => "label2", "value"=> "opt2"),
+                array("label" => "label3", "value"=> "opt3")
+            ),
+            "meta" => array(
+                "category" => "section1"
+            )
+        ),
+        "text" => array(
+            "name" => "text1",
+            "meta" => array(
+                "category" => "client"
+            )
+        ),
+    ),
+    "meta" => array(
+        "Facility" => "sfsfs",
+        "something" => "nothing"
+    )
+);  
+
+SchemaDefine::create($data);
+
+
+/*saving a field*/
+FieldBool::save(array("type"=>"Form256e003c2f3fbb", "field" => "bool1"), true);
+FieldBool::save(23, "yahooo");

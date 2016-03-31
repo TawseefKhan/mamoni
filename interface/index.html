@@ -1,0 +1,58 @@
+<html>
+<head>
+	<title>Test Mamoni Api</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="css/jjsonviewer.css">
+	<style>
+		.container{width:960px; display: table; margin:auto;}
+		.output{width:100%; margin:30px 0px;}
+		textarea{width:100%; margin:30px 0px; height: 150px;}
+		input{width: 100%; margin:30px 0px; height:35px;}
+		.output{width:100%;}
+		.output .item{width: 100%; padding: 20px; border-bottom: 2px solid #363636;}
+		.item-r{width: 100%; padding: 20px; border-bottom: 2px solid #363636;}
+	</style>
+</head>
+<body>
+<div class="container">
+	<input type="text" id="api_link"/>
+	<textarea id="json">
+	</textarea>
+	<button>Execute</button>
+
+
+	<div class="output">
+	</div>
+</div>
+
+<script type="text/javascript" src="js/jjsonviewer.js"></script>
+<script>
+var counter=0;
+$("button").click(function(){
+	var d = $.trim($("#json").val()).replace( /\r?\n/g, "\r\n" );
+	var jason;
+	try{
+		jason = jQuery.parseJSON( d );
+	}
+	catch (e) {
+		alert("check json string");
+		return;
+	}
+	
+	//$(".output").prepend("<div class='item-r'><pre>" + d + "</pre></div>");
+    $.post("http://kolorob.net/mamoni/survey/api/" + $.trim($("#api_link").val()),
+    {
+        data:jason
+    },
+    function(data, status){
+        $(".output").prepend("<div id='item"+counter+"' class='item'></div>");
+        
+        $("#item" + counter).jJsonViewer(data);
+        counter++;
+    });
+});
+</script>
+
+
+</body>
+</html>
