@@ -128,7 +128,7 @@ class FormRequest extends Response {
         }
     }
     
-    private function update($user_id, $form_id, $data, $status=3, $meta=false){
+    private function update($user_id, $form_id, $data, $status=4, $meta=false){
         //update the new form
         try {
             FormRepository::update($form_id, $data, $meta);
