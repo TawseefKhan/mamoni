@@ -1,0 +1,125 @@
+<?php
+
+class  FieldCategory extends Field {
+    
+    public function __construct() {
+        parent::__construct();
+    }
+    
+  
+    /**
+    * Will through exception is not unique name.
+    *
+    * @param string $name Unique name of the field
+    * @param integer $_formTypeId its parent form type
+    * @param string $datas text, date, number, boolean
+    *
+    *  @return integer the field id
+    */
+    static function create($name, $_formTypeId, $datas, $type="text")
+    {
+       //call the parent create
+       $fieldId = parent::create($name, $_formTypeId, "text", true);
+       
+       //populate the possible options in the dropdown
+       foreach($datas as $data)
+       {
+            FModel::$db->insert("field_text", array(
+                "value" => $data["value"],
+                "label" => (isset($data["label"])?$data["label"] : ''),
+                "_field_id" => $fieldId
+            ));
+       }
+       
+       return $fieldId;
+    }
+    
+    
+    
+    /**
+    * @param string $name string or number
+    *
+    * @return boolean
+    */
+    static function delete($name)
+    {
+        //get the id if name is inputed
+        $id = FModel::computeId($name, '_field_details' , 
+                array("field_name" => $name["field"], "form_type_name" => $name["type"] ),
+                "field_id"
+            );
+        
+        //delte the values
+        FModel::$db->delete("field_text", "_field_id = " . $id, false);
+        
+        //delete the field
+        return parent::delete($id);
+    
+    }
+     
+    /**
+    * return  value id of a field of acretain value.. tracked by yht label field in he text
+    * @param Integer $fieldId array(string) or number
+    * @param string $label
+    * @return boolean
+    */
+    static function getFieldValueId($fieldId, $label){
+        //get the id of the value
+        $data = FModel::$db->select("select id from field_text where _field_id = :fieldid and label = :label",
+                array(":fieldid" => $fieldId, ":label" => $label )
+                );
+        
+        
+        if(isset($data[0]["id"]))
+            return $data[0]["id"];
+        else
+            return -1;
+    }
+    
+    
+     /**
+    * Save a field data
+    * 
+    * @param integer $fieldId Id of the field or the formtype name and field name
+    * @param String $label 
+    * 
+    * @return integer the newly made value id
+    */
+    static function save($fieldId , $label){  
+        
+        $fieldId = FModel::computeId($fieldId, '_field_details' , 
+                array("field_name" => $fieldId["field"], "form_type_name" => $fieldId["type"] ),
+                "field_id"
+            );
+        
+        $id = FieldCategory::getFieldValueId($fieldId, $label);
+        
+        if($id==-1)
+            throw new Exception ("Sorry make sure you have the right data for this category");
+        else
+            return $id;
+    }
+    
+    
+    static function getValue($fieldValueId){
+        $data = FModel::$db->select("select value, label from field_text where id = :id",
+                array(":id"=> $fieldValueId)
+            );
+        
+        if(isset($data[0]))
+            return $data[0]["value"];
+        else
+            return -1;
+    }
+    
+    static function deleteValue($id, $sure=false){
+        if($sure)
+            FModel::$db->delete("field_text", "id = ". $id);
+    }
+    
+    /*static function update($valueId, $label){
+        var_dump($valueId);
+        FModel::$db->update("field_bool", $label, "id = $valueId");
+    }*/
+    
+}

@@ -1,0 +1,19 @@
+<?php
+
+class View {
+
+    function __construct() {
+        //echo 'this is the view';
+    }
+
+    public function render($name, $fields = false)
+    {
+        require 'views/' . $name . '.php';    
+    }
+
+    public function render_section($name, $fields = false)
+    {
+    	require 'views/sections/' . $name . '.php';
+    }
+
+}

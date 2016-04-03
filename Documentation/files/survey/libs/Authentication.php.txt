@@ -1,0 +1,155 @@
+<?php
+
+class Authentication {
+    
+    function __construct() {
+        //echo 'Main controller<br />';
+    }
+    
+    static function metaCheck($metas, $arr){
+        //check the metas
+        if(isset($metas)){
+            foreach ($metas as $key => $val){
+                if(!in_array($key, $arr)){
+                    throw new Exception("Sorry you are not allowed to update " . $key);
+                }
+            }
+        }
+    }
+    
+    static private function endRequest($msg){
+        $r = new Response;
+        $r->status=0;
+        $r->addMessage($msg);
+        ApiEncode::printJson($r->getArray());
+        die();
+    }
+    
+    /**
+    * @var Database $db \
+    */
+   static private $db;
+    
+    static public function login($username, $password){
+        
+        Authentication::$db = Database::get();
+        $data = Authentication::$db->countRecords("users","email = :email and password = :password", array(
+            ":email" => $username,
+            ":password"=> $password
+        ));
+        
+        if($data==1){
+            return new User($username);
+        }
+        else{
+            Authentication::endRequest("Sorry username and Password do not match");
+        }
+    }
+    
+    
+    /**
+    * will authenticate the request with respect to the user if error will throw
+    * exception or else willreturn true
+    *
+    * @param User $user 
+    * @param array $request 
+    *
+    * @return bool or exception
+    */
+    
+    static function AuthenticateFormRequest($user, $request){
+        
+        Authentication::$db = Database::get();
+        
+        if($request["type"]=="add"){
+            //only the collector can add a new form
+            if($user->type!="collector"){
+                throw new Exception("Sorry you are not alowed to add any forms");
+            }
+            if(isset($request["meta"])){
+                throw new Exception("Not allowed to send a meta when adding");
+            }
+            if(isset($request["status"])){
+                throw new Exception("Not allowed to send a status when adding");
+            }
+        }
+        elseif($request["type"]=="update"){
+            //only the admin cannot update any form
+            if($user->type=="admin"){
+                //if isset data
+                if(isset($request["data"])){
+                    throw new Exception("You are not allowed to update the data yourself");
+                }
+                
+                //if isset status
+                if(isset($request["status"])){
+                    throw new Exception("You are not allowed to update the status yourself");
+                }
+                echo "asdasdasda";
+                //check the allowed meta tags
+                if(isset($request["meta"]))
+                    Authentication::metaCheck($request["meta"], array("admin_comments"));
+                
+            }
+            elseif($user->type=="supervisor"){
+                //check to see if status is available
+                if(!isset($request["status"])){
+                    throw new Exception("Please return a status");
+                }
+                
+                //if isset data
+                if(isset($request["data"])){
+                    throw new Exception("You are not allowed to update the data yourself");
+                }
+                
+                //check to see if the form is in 3->pending, 3->accepted state and the users destrict match
+                $counter = Authentication::$db->countRecords("_sync_user", "_form_id = :formid and _district_id = :districtid and status in (3,1)",
+                        array(
+                            ":formid"=>$request["form_id"],
+                            ":districtid"=>$user->districtId
+                        )
+                    );
+                if($counter!=1){
+                    throw new Exception("Sorry you are not allowed to update this form");
+                }
+                
+                //check the allowed meta tags
+                if(isset($request["meta"]))
+                    Authentication::metaCheck($request["meta"], array("comments", "fields"));
+                
+                
+                if(isset($request["meta"])&&!isset($request["status"])){
+                    throw new Exception("Please send a status along with your meta data");
+                }
+                
+            }
+            elseif($user->type=="collector"){
+                //collector cannot send the meta data
+                if(isset($request["meta"]))
+                    throw new Exception("Sorry you are not allowed to add meta data");
+                
+                if(isset($request["status"]))
+                    throw new Exception("sorry you are not allowed to update the status");
+                
+                //check if he was the one who created the form and if the status is 2->reverted
+                $counter = Authentication::$db->countRecords("sync", "_form_id = :formid and _user_id = :userid and status in (2)",
+                        array(
+                            ":formid" => $request["form_id"],
+                            ":userid" => $user->id
+                        )
+                    );
+                
+                if($counter!=1){
+                    throw new Exception("Sorry you cannot update this form untill the supervisor checks it.");
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    static function AuthenticateSyncRequest(){
+        
+    }
+}
+

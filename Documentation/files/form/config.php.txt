@@ -15,3 +15,4 @@ define('FDB_HOST', 'localhost');
 define('FDB_NAME', 'mamoni');
 define('FDB_USER', 'postgres');
 define('FDB_PASS', 'kolorob@SCIBD@2015-06');
+
