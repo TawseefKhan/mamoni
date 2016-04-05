@@ -11,3 +11,6 @@ select * from forms_data fod, _field_details fid where fod._field_id=fid.field_i
 
 create or replace view _sync_user as
 select s.*, u._district_id from sync s, users u where s._user_id= u.id;
+
+CREATE OR REPLACE VIEW _sync_form AS
+select s.*, f.form_type_id, f.form_type_name from _form_details f, sync s where f.form_id = s._form_id;

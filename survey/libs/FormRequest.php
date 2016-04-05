@@ -30,9 +30,12 @@ class FormRequest extends Response {
         
         foreach ($requests as $request) {
             $request = (array)$request;
+            
+            
             //check the request
             try {
                 RequestValidate::validateSubFormRequest($request);
+                $request = CastRequest::Cast($user, $request);
                 Authentication::AuthenticateFormRequest($user, $request);
             } catch (Exception $exc) {
                 $r = new Response();
@@ -49,10 +52,7 @@ class FormRequest extends Response {
 
             //is add, update or delete
             if($request["type"]=="add"){
-                /*if(isset($request["meta"]))
-                    $r = $this->add($user_id, $request["form_type"], $request["data"], $request["meta"]);
-                else*/
-                    $r = $this->add($user->id, $request["form_type"], $request["data"]);
+                    $r = $this->add($user->id, $request["form_type"], $request["data"], $request["form_id"]);
             }
             elseif($request["type"]=="update"){  
                 if(!isset($request["data"])){
@@ -63,12 +63,14 @@ class FormRequest extends Response {
                     $request["status"]=4;
                 }
                 
-                var_dump($request["status"]);
                 
                 if(isset($request["meta"]))
-                    $r = $this->update($user->id, $request["form_id"], $request["data"], $request["status"],$request["form_id"], $request["meta"]);
+                {
+                    var_dump($request["meta"]);
+                    $r = $this->update($user->id, $request["form_id"], $request["data"], $request["status"], $request["meta"]);
+                }
                 else
-                    $r = $this->update($user->id, $request["form_id"], $request["data"],$request["form_id"]);
+                    $r = $this->update($user->id, $request["form_id"], $request["data"]);
             }
             elseif($request["type"]=="delete"){
                 $r = $this->delete($user->id, $request["form_id"]);
@@ -86,10 +88,9 @@ class FormRequest extends Response {
         }
     }
     
-    private function add($user_id, $form_type, $data, $status=3, $local_id, $meta=false ){
+    private function add($user_id, $form_type, $data, $local_id, $status=3,  $meta=false ){
         $now = date('Y-m-d H:i:s');
         
-        var_dump($local_id);
         //add to the schema and get the new id   
         try {
             $form_id = FormRepository::add($form_type, $data, $meta);
@@ -144,9 +145,6 @@ class FormRequest extends Response {
             $this->errorCount++;
             return $r;
         }
-        
-        var_dump($status);
-
         
         //Update to the sync table
         if($status===false)

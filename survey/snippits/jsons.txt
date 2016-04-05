@@ -194,6 +194,7 @@ kolorob.net/mamoni/survey/api/form
     {
       "type": "update",
       "form_id": 95,
+      "form_type" : "dh_antenantals",
       "data": {
         "hemoglobintest": true,
         "bloodpressure": false,
@@ -220,6 +221,8 @@ kolorob.net/mamoni/survey/api/form
     {
       "type": "update",
       "form_id": 95,
+      "form_type" : "dh_antenantals",
+      "submitted_by" : "taw_khan@yahoo.com",
       "status" : 1,
       "meta" : {
         "comments" : "this is a comment",
@@ -241,7 +244,6 @@ kolorob.net/mamoni/survey/api/sync
 {
 "username" : "taw_khan1@yahoo.com",
 "password" : "taw1994",
-"timestamp" : "2016-03-24 11:20:29",
 "get_all" : true
 }
 

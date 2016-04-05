@@ -42,8 +42,7 @@ class Api extends Controller {
         //the logged in user credentials
         $user  = Authentication::login($_POST["data"]["username"], $_POST["data"]["password"]);
         
-        
-        //sent the valid request to model
+        //sent the valid request to model a
         $formRequest = new FormRequest();
         $formRequest->run($user, $_POST["data"]["requests"]);
         ApiEncode::printJson($formRequest->getArrays());

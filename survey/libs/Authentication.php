@@ -72,6 +72,7 @@ class Authentication {
             if(isset($request["status"])){
                 throw new Exception("Not allowed to send a status when adding");
             }
+
         }
         elseif($request["type"]=="update"){
             //only the admin cannot update any form
@@ -85,7 +86,7 @@ class Authentication {
                 if(isset($request["status"])){
                     throw new Exception("You are not allowed to update the status yourself");
                 }
-                echo "asdasdasda";
+                
                 //check the allowed meta tags
                 if(isset($request["meta"]))
                     Authentication::metaCheck($request["meta"], array("admin_comments"));
@@ -95,6 +96,11 @@ class Authentication {
                 //check to see if status is available
                 if(!isset($request["status"])){
                     throw new Exception("Please return a status");
+                }
+                
+                //check submitted by
+                if(!isset($request["submitted_by"])){
+                    throw new Exception("Please return the username of the owner of this form");
                 }
                 
                 //if isset data
@@ -109,6 +115,7 @@ class Authentication {
                             ":districtid"=>$user->districtId
                         )
                     );
+                
                 if($counter!=1){
                     throw new Exception("Sorry you are not allowed to update this form");
                 }

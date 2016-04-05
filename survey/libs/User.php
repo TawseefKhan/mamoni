@@ -7,6 +7,10 @@ class User {
             ":username" => $user_name
         ));
         
+        if(!isset($data[0])){
+            throw new Exception("Who is this submitted User!");
+        }
+        
         $this->id = $data[0]["id"];
         $this->username = $data[0]["email"];
         $this->type = $data[0]["type"];

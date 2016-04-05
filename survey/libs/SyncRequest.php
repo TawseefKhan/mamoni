@@ -34,7 +34,7 @@ class SyncRequest extends Response {
             // timestamp in db has to be more the given timestamp
             // the owner of the form has to match 
             // he cant be the last one who has updated
-            $this->forms = $this->db->select("select _form_id as form_id, status, _update_user_id as checked_by_user from sync where "
+            $this->forms = $this->db->select("select local_id, _form_id as form_id, status, _update_user_id as checked_by_user from sync where "
                     . "timestamp > :timestamp and _user_id = :userid",
                     array(
                         ":timestamp"=>$timestamp,
@@ -54,7 +54,7 @@ class SyncRequest extends Response {
             // timestamp in db has to be more then given timestamp
             // the destrict of the form has to match 
             // he cant be the last one who has updated
-            $this->forms = $this->db->select("select _form_id as form_id, status, _user_id as user_id from _sync_user where "
+            $this->forms = $this->db->select("select local_id, _form_id as form_id, status, _user_id as user_id from _sync_user where "
                     . "timestamp > :timestamp and _district_id = :districtid",
                     array(
                         ":timestamp"=>$timestamp,
@@ -80,7 +80,7 @@ class SyncRequest extends Response {
         
         if($user->type=="collector")
         {
-            $this->forms = $this->db->select("select _form_id as form_id, status, _update_user_id as checked_by_user  from sync where "
+            $this->forms = $this->db->select("select local_id, _form_id as form_id, status, _update_user_id as checked_by_user  from sync where "
                     . "_user_id = :userid",
                     array(
                         ":userid"=>$user->id
@@ -101,7 +101,7 @@ class SyncRequest extends Response {
             $this->message = "All data sent";
         }
         elseif($user->type=="supervisor"){
-            $this->forms = $this->db->select("select _form_id as form_id, status, _user_id as user_id from _sync_user where "
+            $this->forms = $this->db->select("select local_id, _form_id as form_id, status, _user_id as user_id from _sync_user where "
                     . "_district_id = :districtid",
                     array(
                         ":districtid"=>$user->districtId
@@ -125,8 +125,15 @@ class SyncRequest extends Response {
     
      public function getArrays(){
         $arr = $this->getArray();
-        $arr["forms"] = $this->forms;
         $arr["updated_at"] =  date('Y-m-d H:i:s');
+        
+        //copy the local_id to form_id and delete form_id
+        for($i=0; $i<count($this->forms); $i++){
+            $this->forms[$i]["form_id"] =  $this->forms[$i]["local_id"];
+            unset($this->forms[$i]["local_id"]);
+        }
+        //then insert the list
+        $arr["forms"] = $this->forms;
         
         return $arr;
     }
