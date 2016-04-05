@@ -108,7 +108,7 @@ class RequestValidate {
         if(($request["type"]=="add")&&(!isset($request["form_type"]))){
             throw new Exception("Form type not found");
         }
-        if(($request["type"]!="add")&&(!isset($request["form_id"]))){
+        if(!isset($request["form_id"])){
             throw new Exception("Please provide the form Id");
         }
         if(!isset($request["data"])){

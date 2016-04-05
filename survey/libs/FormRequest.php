@@ -66,9 +66,9 @@ class FormRequest extends Response {
                 var_dump($request["status"]);
                 
                 if(isset($request["meta"]))
-                    $r = $this->update($user->id, $request["form_id"], $request["data"], $request["status"], $request["meta"]);
+                    $r = $this->update($user->id, $request["form_id"], $request["data"], $request["status"],$request["form_id"], $request["meta"]);
                 else
-                    $r = $this->update($user->id, $request["form_id"], $request["data"]);
+                    $r = $this->update($user->id, $request["form_id"], $request["data"],$request["form_id"]);
             }
             elseif($request["type"]=="delete"){
                 $r = $this->delete($user->id, $request["form_id"]);
@@ -86,8 +86,10 @@ class FormRequest extends Response {
         }
     }
     
-    private function add($user_id, $form_type, $data, $status=3, $meta=false ){
+    private function add($user_id, $form_type, $data, $status=3, $local_id, $meta=false ){
         $now = date('Y-m-d H:i:s');
+        
+        var_dump($local_id);
         //add to the schema and get the new id   
         try {
             $form_id = FormRepository::add($form_type, $data, $meta);
@@ -107,6 +109,7 @@ class FormRequest extends Response {
             "timestamp" => $now,
             "_user_id" => $user_id,
             "_update_user_id" => $user_id,
+            "local_id" =>  $local_id,
             "status" => $status
         ));
         
@@ -117,7 +120,7 @@ class FormRequest extends Response {
             $r->status = 2;
             $r->timestamp = $now;
             $r->addMessage("Added sucessfully");
-            $r->data["form_id"] = $form_id;
+            //$r->data["form_id"] = $form_id;
             return $r;
         }
         else{
