@@ -108,8 +108,8 @@ class Authentication {
                     throw new Exception("You are not allowed to update the data yourself");
                 }
                 
-                //check to see if the form is in 3->pending, 3->accepted state and the users destrict match
-                $counter = Authentication::$db->countRecords("_sync_user", "_form_id = :formid and _district_id = :districtid and status in (3,1)",
+                //check to see if the form is in 3->pending, 1->accepted state, 4-> resubmitted and the users destrict match
+                $counter = Authentication::$db->countRecords("_sync_user", "_form_id = :formid and _district_id = :districtid and status in (3,1,4)",
                         array(
                             ":formid"=>$request["form_id"],
                             ":districtid"=>$user->districtId

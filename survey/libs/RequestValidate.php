@@ -99,7 +99,7 @@ class RequestValidate {
     
     static function validateSubFormRequest($request){
         
-        if(!isset($request["type"])){
+        /*if(!isset($request["type"])){
             throw new Exception("Request type not found");
         }
         if(!in_array($request["type"], array("add", "update", "delete"))){
@@ -107,7 +107,7 @@ class RequestValidate {
         }
         if(($request["type"]=="add")&&(!isset($request["form_type"]))){
             throw new Exception("Form type not found");
-        }
+        }*/
         if(!isset($request["form_id"])){
             throw new Exception("Please provide the form Id");
         }
