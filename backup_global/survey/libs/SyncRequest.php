@@ -1,0 +1,133 @@
+<?php
+class SyncRequest extends Response {
+    public function __construct(){
+        $this->db = Database::get(); 
+        $this->collectorMeta = array("comments", "fields");
+        $this->SupervisorMeta = array("admin_comments");
+        $this->SupervisorMetaAll = array("admin_comments","comments", "fields");
+    }   
+    private $collectorMeta;
+    private $SupervisorMeta;
+    private $SupervisorMetaAll;
+    /**
+    * @var Database $db \
+    */
+    private $db;
+    
+    
+    /**
+    * @var array $forms \
+    */
+    private $forms;
+    
+    
+    public function run($user, $timestamp, $allFroms=false){
+        
+        //if all form
+        if($allFroms=="true") {
+            $this->allFormsSync($user);
+            return;
+        }
+        
+        //according to the type of user
+        if($user->type=="collector"){//will only send the meta data (i.e. the comments) and the status 
+            // timestamp in db has to be more the given timestamp
+            // the owner of the form has to match 
+            // he cant be the last one who has updated
+            $this->forms = $this->db->select("select _form_id as form_id, status, _update_user_id as checked_by_user from sync where "
+                    . "timestamp > :timestamp and _user_id = :userid",
+                    array(
+                        ":timestamp"=>$timestamp,
+                        ":userid"=>$user->id
+                    )
+                );
+            
+            for($i=0; $i<count($this->forms); $i++)
+            {
+                $this->forms[$i]["meta"] = FormRepository::getFormMeta($this->forms[$i]["form_id"], $this->collectorMeta);
+                $this->forms[$i]["status"] = $this->forms[$i]["status"];
+                $this->forms[$i]["checked_by"] = User::getUsernameById($this->forms[$i]["checked_by_user"]);
+                $this->forms[$i]["form_type"] = Form::getFormType($this->forms[$i]["form_id"]);
+            }
+        }
+        elseif($user->type=="supervisor"){//will send all the fields
+            // timestamp in db has to be more then given timestamp
+            // the destrict of the form has to match 
+            // he cant be the last one who has updated
+            $this->forms = $this->db->select("select _form_id as form_id, status, _user_id as user_id from _sync_user where "
+                    . "timestamp > :timestamp and _district_id = :districtid",
+                    array(
+                        ":timestamp"=>$timestamp,
+                        ":districtid"=>$user->districtId
+                    )
+                );
+            
+            for($i=0; $i<count($this->forms); $i++)
+            {
+                $this->forms[$i]["data"] = FormRepository::getFormFields($this->forms[$i]["form_id"]);
+                $this->forms[$i]["status"] = $this->forms[$i]["status"];
+                $this->forms[$i]["submitted_by"] = User::getUsernameById($this->forms[$i]["user_id"]);
+                $this->forms[$i]["form_type"] = Form::getFormType($this->forms[$i]["form_id"]);
+                $this->forms[$i]["meta"] = FormRepository::getFormMeta($this->forms[$i]["form_id"], $this->SupervisorMeta);
+            }
+        }
+        
+        $this->status = true;
+        $this->message = "Sync data sent";
+    }
+    
+    private function allFormsSync($user){
+        
+        if($user->type=="collector")
+        {
+            $this->forms = $this->db->select("select _form_id as form_id, status, _update_user_id as checked_by_user  from sync where "
+                    . "_user_id = :userid",
+                    array(
+                        ":userid"=>$user->id
+                    )
+                );
+
+            for($i=0; $i<count($this->forms); $i++)
+            {
+                $this->forms[$i]["meta"] = FormRepository::getFormMeta($this->forms[$i]["form_id"],$this->collectorMeta);
+                $this->forms[$i]["data"] = FormRepository::getFormFields($this->forms[$i]["form_id"]);
+                $this->forms[$i]["status"] = $this->forms[$i]["status"];
+                $this->forms[$i]["checked_by"] = User::getUsernameById($this->forms[$i]["checked_by_user"]);
+                $this->forms[$i]["form_type"] = Form::getFormType($this->forms[$i]["form_id"]);
+            }
+
+
+            $this->status = true;
+            $this->message = "All data sent";
+        }
+        elseif($user->type=="supervisor"){
+            $this->forms = $this->db->select("select _form_id as form_id, status, _user_id as user_id from _sync_user where "
+                    . "_district_id = :districtid",
+                    array(
+                        ":districtid"=>$user->districtId
+                    )
+                );
+
+            for($i=0; $i<count($this->forms); $i++)
+            {
+                $this->forms[$i]["meta"] = FormRepository::getFormMeta($this->forms[$i]["form_id"], $this->SupervisorMetaAll);
+                $this->forms[$i]["data"] = FormRepository::getFormFields($this->forms[$i]["form_id"]);
+                $this->forms[$i]["status"] = $this->forms[$i]["status"];
+                $this->forms[$i]["submitted_by"] = User::getUsernameById($this->forms[$i]["user_id"]);
+                $this->forms[$i]["form_type"] = Form::getFormType($this->forms[$i]["form_id"]);
+            }
+
+
+            $this->status = true;
+            $this->message = "All data sent";
+        }
+    }
+    
+     public function getArrays(){
+        $arr = $this->getArray();
+        $arr["forms"] = $this->forms;
+        $arr["updated_at"] =  date('Y-m-d H:i:s');
+        
+        return $arr;
+    }
+}
