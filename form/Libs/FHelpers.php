@@ -21,6 +21,13 @@ class FHelpers {
             $cls = new FieldInt();
         }
         
+        else if($type=="textarray"){
+            $cls = new FieldTextArray();
+        }
+        
+        else if($type=="intarray"){
+            $cls = new FieldTextArray();
+        }
         return $cls;
     }
 }

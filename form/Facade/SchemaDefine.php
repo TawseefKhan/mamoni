@@ -30,6 +30,12 @@ class  SchemaDefine {
             elseif($value["type"]=="text"){
                 $fieldId = FieldText::create($key, $FormTypeId);
             }
+            elseif($value["type"]=="textarray"){
+                $fieldId = FieldTextArray::create($key, $FormTypeId);
+            }
+            elseif($value["type"]=="intarray"){
+                $fieldId = FieldIntArray::create($key, $FormTypeId);
+            }
             
             //save the fields meta
             if(isset($value["meta"]))

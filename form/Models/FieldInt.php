@@ -17,7 +17,7 @@ class  FieldInt extends Field {
     static function create($name, $_formTypeId, $type="number", $category=false)
     {
        //call the parent create
-       return parent::create($name, $_formTypeId, "number", false);
+       return parent::create($name, $_formTypeId, $type, false);
     }
     
     

@@ -18,7 +18,7 @@ class  FieldText extends Field {
     static function create($name, $_formTypeId, $type="text", $category=false)
     {
        //call the parent create
-       return parent::create($name, $_formTypeId, "text", false);
+       return parent::create($name, $_formTypeId, $type, false);
     }
     
     
