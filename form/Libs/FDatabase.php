@@ -21,7 +21,7 @@ class FDatabase extends PDO
             return Database::$instance;
         }
         else{
-            Database::$instance = new Database(FDB_TYPE, FDB_HOST, FDB_NAME, FDB_USER, FDB_PASS);
+            Database::$instance = new Database(DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS);
             
             return Database::$instance;
         }
